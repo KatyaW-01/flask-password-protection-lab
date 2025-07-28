@@ -23,9 +23,19 @@ class Signup(Resource):
         db.session.add(user)
         db.session.commit()
         return UserSchema().dump(user), 201
+    
+
+    
+class CheckSession(Resource):
+    def get(self):
+        if session.get('user_id'):
+            user = User.query.filter(User.id == session['user_id']).first()
+            return UserSchema().dump(user), 200
+        return {}, 204
 
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
