@@ -13,12 +13,13 @@ class User(db.Model):
     # Build method to protect password_hash property
     @hybrid_property
     def password_hash(self):
-        pass
+        raise Exception('Password hashes may not be viewed')
 
     # Build method to set password hash property using bcrypt.generate_password_hash()
     @password_hash.setter
     def password_hash(self, password):
-        pass
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
 
     # Build authenticate method that uses bcrypt.check_password_hash()
     def authenticate(self, password):
